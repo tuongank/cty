@@ -3,7 +3,8 @@ import { configure } from 'quasar/wrappers'
 export default configure(function (/* ctx */) {
   return {
     boot: [
-      'axios'
+      'axios',
+      'pinia'
     ],
 
     css: [
