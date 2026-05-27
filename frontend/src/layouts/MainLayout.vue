@@ -24,7 +24,69 @@
     >
       <q-list>
         <q-item-label header class="drawer-header">
-          Navigation
+          Tool Management
+        </q-item-label>
+
+        <q-item
+          clickable
+          v-ripple
+          to="/tool-management/dashboard"
+          active-class="drawer-item-active"
+        >
+          <q-item-section avatar>
+            <q-icon name="dashboard" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Operations Dashboard</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item
+          clickable
+          v-ripple
+          to="/tool-management/current-status"
+          active-class="drawer-item-active"
+        >
+          <q-item-section avatar>
+            <q-icon name="insights" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Current Status</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item
+          clickable
+          v-ripple
+          to="/tool-management/maintenance"
+          active-class="drawer-item-active"
+        >
+          <q-item-section avatar>
+            <q-icon name="build" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Maintenance Control</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item
+          clickable
+          v-ripple
+          to="/tool-management/scrap-history"
+          active-class="drawer-item-active"
+        >
+          <q-item-section avatar>
+            <q-icon name="delete_outline" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Scrap History</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-separator class="q-my-md" />
+
+        <q-item-label header class="drawer-header">
+          Administration
         </q-item-label>
 
         <q-item
@@ -38,7 +100,6 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>Master Registration</q-item-label>
-            <q-item-label caption>Administration</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
