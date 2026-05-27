@@ -8,8 +8,11 @@ export const registryService = {
    * @returns {Promise<RegistryResponse>}
    */
   async getAll(params: PaginationState & { filter?: string }): Promise<RegistryResponse> {
-    const res = await api.get('/registries', { params })
-    return res.data
+    const res = await api.get('/tool-fh-registries', { params })
+    return {
+      data: res.data.data,
+      total: res.data.meta?._page?.totalElements || 0
+    }
   },
 
   /**
@@ -18,8 +21,8 @@ export const registryService = {
    * @returns {Promise<Registry>}
    */
   async create(data: Partial<Registry>): Promise<Registry> {
-    const res = await api.post('/registries', data)
-    return res.data
+    const res = await api.post('/tool-fh-registries', data)
+    return res.data.data
   },
 
   /**
@@ -29,8 +32,8 @@ export const registryService = {
    * @returns {Promise<Registry>}
    */
   async update(id: number, data: Partial<Registry>): Promise<Registry> {
-    const res = await api.put(`/registries/${id}`, data)
-    return res.data
+    const res = await api.put(`/tool-fh-registries/${id}`, data)
+    return res.data.data
   },
 
   /**
@@ -39,7 +42,7 @@ export const registryService = {
    * @returns {Promise<void>}
    */
   async delete(id: number): Promise<void> {
-    await api.delete(`/registries/${id}`)
+    await api.delete(`/tool-fh-registries/${id}`)
   },
 
   /**
@@ -47,7 +50,7 @@ export const registryService = {
    * @returns {Promise<Blob>}
    */
   async downloadTemplate(): Promise<Blob> {
-    const res = await api.get('/registries/template/download', { responseType: 'blob' })
+    const res = await api.get('/tool-fh-registries/template/download', { responseType: 'blob' })
     return res.data
   },
 
@@ -59,9 +62,10 @@ export const registryService = {
   async uploadExcel(file: File): Promise<any> {
     const formData = new FormData()
     formData.append('file', file)
-    const res = await api.post('/registries/upload/excel', formData, {
+    const res = await api.post('/tool-fh-registries/upload/excel', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
-    return res.data
+    return res.data.data
   }
 }
+

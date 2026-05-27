@@ -25,13 +25,13 @@ export const STATUS_CLASS_MAP: Record<string, string> = {
 
 // TypeScript Interfaces
 export interface Category {
-  id: string;
-  name: string;
+  id: number;
+  category: string; // The response uses 'category' for name
 }
 
 export interface ToolType {
   id: number;
-  categoryId: string;
+  categoryId: number;
   categoryName: string;
   typeCode: string;
 }
@@ -39,7 +39,7 @@ export interface ToolType {
 export interface Registry {
   id: number;
   serialNumber: string;
-  categoryId: string;
+  categoryId: number;
   categoryName: string;
   typeCode: string;
   zoneLoc: string;
@@ -62,7 +62,7 @@ export interface RegistryResponse {
 // Table column definitions
 export const CATEGORY_COLUMNS = [
   { name: 'id', label: 'ID', field: 'id', align: 'left', sortable: true },
-  { name: 'name', label: 'Category Name', field: 'name', align: 'left', sortable: true },
+  { name: 'name', label: 'Category Name', field: 'category', align: 'left', sortable: true },
   { name: 'actions', label: 'Actions', field: 'actions', align: 'right' }
 ] as any[];
 

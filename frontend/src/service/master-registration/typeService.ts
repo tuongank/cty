@@ -7,8 +7,8 @@ export const typeService = {
    * @returns {Promise<ToolType[]>}
    */
   async getAll(): Promise<ToolType[]> {
-    const res = await api.get('/types')
-    return res.data
+    const res = await api.get('/tool-fh-types')
+    return res.data.data
   },
 
   /**
@@ -17,8 +17,8 @@ export const typeService = {
    * @returns {Promise<ToolType>}
    */
   async create(data: Partial<ToolType>): Promise<ToolType> {
-    const res = await api.post('/types', data)
-    return res.data
+    const res = await api.post('/tool-fh-types', data)
+    return res.data.data
   },
 
   /**
@@ -28,8 +28,8 @@ export const typeService = {
    * @returns {Promise<ToolType>}
    */
   async update(id: number, data: Partial<ToolType>): Promise<ToolType> {
-    const res = await api.put(`/types/${id}`, data)
-    return res.data
+    const res = await api.put(`/tool-fh-types/${id}`, data)
+    return res.data.data
   },
 
   /**
@@ -38,6 +38,7 @@ export const typeService = {
    * @returns {Promise<void>}
    */
   async delete(id: number): Promise<void> {
-    await api.delete(`/types/${id}`)
+    await api.delete(`/tool-fh-types/${id}`)
   }
 }
+

@@ -1,7 +1,7 @@
 package com.cty.toolmaster.service;
 
-import com.cty.toolmaster.entity.Registry;
-import com.cty.toolmaster.repository.RegistryRepository;
+import com.cty.toolmaster.entity.ToolFHRegistry;
+import com.cty.toolmaster.repository.ToolFHRegistryRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -10,17 +10,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class ExcelService {
-    private final RegistryRepository registryRepository;
+    private final ToolFHRegistryRepository toolFHRegistryRepository;
 
     public Map<String, Object> uploadExcel(MultipartFile file) {
-        List<Registry> registries = new ArrayList<>();
+        List<ToolFHRegistry> registries = new ArrayList<>();
         Map<String, Object> result = new HashMap<>();
         
         try (InputStream is = file.getInputStream(); Workbook workbook = new XSSFWorkbook(is)) {
@@ -41,12 +41,12 @@ public class ExcelService {
                 String zoneLoc = getCellValue(row.getCell(3));
                 String status = getCellValue(row.getCell(4));
                 
-                String categoryId = "HEAD".equalsIgnoreCase(categoryName) ? "CAT-002" : "CAT-001";
+                Integer categoryId = "HEAD".equalsIgnoreCase(categoryName) ? 2 : 1; // Temporary mapping based on integer IDs
                 if (status == null || status.trim().isEmpty()) {
                     status = "ACTIVE";
                 }
                 
-                Registry registry = Registry.builder()
+                ToolFHRegistry registry = ToolFHRegistry.builder()
                         .serialNumber(serialNumber.trim())
                         .categoryName(categoryName != null ? categoryName.trim().toUpperCase() : "")
                         .categoryId(categoryId)
@@ -59,7 +59,7 @@ public class ExcelService {
             }
             
             // Bulk save
-            registryRepository.saveAll(registries);
+            toolFHRegistryRepository.saveAll(registries);
             
             result.put("imported", registries.size());
             result.put("message", "Excel data uploaded successfully");

@@ -36,13 +36,13 @@ export const useMasterRegistrationStore = defineStore('masterRegistration', () =
   // ============================================
   const categoryOptions = computed(() =>
     categories.value.map(c => ({
-      label: c.name,
+      label: c.category,
       value: c.id
     }))
   )
 
   const getTypesByCategory = computed(() => {
-    return (categoryId: string) =>
+    return (categoryId: number) =>
       types.value.filter(t => t.categoryId === categoryId)
   })
 
@@ -75,7 +75,7 @@ export const useMasterRegistrationStore = defineStore('masterRegistration', () =
     }
   }
 
-  async function updateCategory(id: string, data: Partial<Category>) {
+  async function updateCategory(id: number, data: Partial<Category>) {
     categoriesLoading.value = true
     try {
       const result = await categoryService.update(id, data)
@@ -90,7 +90,7 @@ export const useMasterRegistrationStore = defineStore('masterRegistration', () =
     }
   }
 
-  async function deleteCategory(id: string) {
+  async function deleteCategory(id: number) {
     categoriesLoading.value = true
     try {
       await categoryService.delete(id)

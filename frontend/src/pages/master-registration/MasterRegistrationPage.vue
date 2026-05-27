@@ -143,19 +143,19 @@ const store = useMasterRegistrationStore()
 // Dialog State
 // ============================================
 const showCategoryDialog = ref(false)
-const editCategoryItem = ref(null)
+const editCategoryItem = ref<any>(null)
 
 const showTypeDialog = ref(false)
-const editTypeItem = ref(null)
+const editTypeItem = ref<any>(null)
 
 const showRegisterDialog = ref(false)
-const editRegistryItem = ref(null)
+const editRegistryItem = ref<any>(null)
 
 const showDeleteDialog = ref(false)
 const deleteItemLabel = ref('')
 const deleteContext = ref({ type: '', item: null })
 
-const fileInputRef = ref(null)
+const fileInputRef = ref<any>(null)
 
 // ============================================
 // Lifecycle

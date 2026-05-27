@@ -86,12 +86,12 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'submit'])
 
-const formRef = ref(null)
+const formRef = ref<any>(null)
 const submitting = ref(false)
 const isEdit = ref(false)
 
 const form = reactive({
-  categoryId: null,
+  categoryId: null as string | null,
   typeCode: ''
 })
 

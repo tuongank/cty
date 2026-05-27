@@ -145,17 +145,17 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'submit'])
 
-const formRef = ref(null)
+const formRef = ref<any>(null)
 const submitting = ref(false)
 const isEdit = ref(false)
 const statusOptions = TOOL_STATUS_OPTIONS
 
 const form = reactive({
   serialNumber: '',
-  categoryId: null,
-  typeCode: null,
+  categoryId: null as string | null,
+  typeCode: null as string | null,
   zoneLoc: '',
-  status: null
+  status: null as string | null
 })
 
 const dialogVisible = ref(false)

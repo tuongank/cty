@@ -7,8 +7,8 @@ export const categoryService = {
    * @returns {Promise<Category[]>}
    */
   async getAll(): Promise<Category[]> {
-    const res = await api.get('/categories')
-    return res.data
+    const res = await api.get('/tool-feeder')
+    return res.data.data
   },
 
   /**
@@ -17,27 +17,28 @@ export const categoryService = {
    * @returns {Promise<Category>}
    */
   async create(data: Partial<Category>): Promise<Category> {
-    const res = await api.post('/categories', data)
-    return res.data
+    const res = await api.post('/tool-feeder', { categoryName: data.category })
+    return res.data.data
   },
 
   /**
    * Update a category
-   * @param {string} id
+   * @param {number} id
    * @param {Partial<Category>} data
    * @returns {Promise<Category>}
    */
-  async update(id: string, data: Partial<Category>): Promise<Category> {
-    const res = await api.put(`/categories/${id}`, data)
-    return res.data
+  async update(id: number, data: Partial<Category>): Promise<Category> {
+    const res = await api.put(`/tool-feeder/${id}`, { categoryName: data.category })
+    return res.data.data
   },
 
   /**
    * Delete a category
-   * @param {string} id
+   * @param {number} id
    * @returns {Promise<void>}
    */
-  async delete(id: string): Promise<void> {
-    await api.delete(`/categories/${id}`)
+  async delete(id: number): Promise<void> {
+    await api.delete(`/tool-feeder/${id}`)
   }
 }
+

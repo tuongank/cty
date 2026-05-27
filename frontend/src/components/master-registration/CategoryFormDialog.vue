@@ -11,7 +11,7 @@
       <q-card-section class="dialog-body">
         <q-form ref="formRef" @submit.prevent="onSubmit" greedy>
           <q-input
-            v-model="form.name"
+            v-model="form.category"
             label="Category Name *"
             outlined
             dense
@@ -72,7 +72,7 @@ const submitting = ref(false)
 const isEdit = ref(false)
 
 const form = reactive({
-  name: ''
+  category: ''
 })
 
 const dialogVisible = ref(false)
@@ -82,10 +82,10 @@ watch(() => props.modelValue, (val) => {
   if (val) {
     if (props.editItem) {
       isEdit.value = true
-      form.name = props.editItem.name
+      form.category = props.editItem.category
     } else {
       isEdit.value = false
-      form.name = ''
+      form.category = ''
     }
   }
 })
@@ -103,7 +103,7 @@ async function onSubmit () {
     emit('submit', {
       isEdit: isEdit.value,
       id: props.editItem?.id,
-      data: { name: form.name }
+      data: { category: form.category }
     })
   } finally {
     submitting.value = false
