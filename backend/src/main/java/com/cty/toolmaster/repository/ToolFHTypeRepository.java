@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ToolFHTypeRepository extends JpaRepository<ToolFHType, Integer> {
     Optional<ToolFHType> findByTypeCodeAndCategoryId(String typeCode, Integer categoryId);
+    Optional<ToolFHType> findByTypeCodeAndCategory_Name(String typeCode, String categoryName);
 }

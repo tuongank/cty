@@ -54,7 +54,7 @@ public class ExcelService {
                     continue; // skip if category invalid
                 }
 
-                ToolFHType type = typeRepository.findByTypeCodeAndCategoryId(typeCode != null ? typeCode.trim().toUpperCase() : "", category.getId())
+                ToolFHType type = typeRepository.findByTypeCodeAndCategory_Name(typeCode != null ? typeCode.trim().toUpperCase() : "", category.getName())
                         .orElse(null);
                 
                 if (type == null) {

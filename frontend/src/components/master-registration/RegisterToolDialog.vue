@@ -203,14 +203,15 @@ async function onSubmit () {
   submitting.value = true
   try {
     const selectedCat = props.categoryOptions.find(c => c.value === form.categoryId)
+    const selectedType = props.types.find(t => t.id === form.typeId)
+
     emit('submit', {
       isEdit: isEdit.value,
       id: props.editItem?.id,
       data: {
         serialNumber: form.serialNumber,
-        categoryId: form.categoryId,
         categoryName: selectedCat?.label || '',
-        typeId: form.typeId,
+        typeName: selectedType?.typeCode || '',
         location: form.location,
         status: form.status
       }

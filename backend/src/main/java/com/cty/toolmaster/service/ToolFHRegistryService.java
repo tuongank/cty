@@ -57,10 +57,10 @@ public class ToolFHRegistryService {
             throw new IllegalArgumentException("Serial number already exists");
         }
 
-        ToolFHCategory category = categoryRepository.findById(request.getCategoryId())
+        ToolFHCategory category = categoryRepository.findToolFHCategoryByName(request.getCategoryName())
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
-        ToolFHType type = typeRepository.findById(request.getTypeId())
+        ToolFHType type = typeRepository.findByTypeCodeAndCategory_Name(request.getTypeName(), request.getCategoryName())
                 .orElseThrow(() -> new IllegalArgumentException("Type not found"));
 
         ToolFHRegistry toolFHRegistry = ToolFHRegistry.builder()
@@ -85,10 +85,10 @@ public class ToolFHRegistryService {
             }
         }
 
-        ToolFHCategory category = categoryRepository.findById(request.getCategoryId())
+        ToolFHCategory category = categoryRepository.findToolFHCategoryByName(request.getCategoryName())
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
-        ToolFHType type = typeRepository.findById(request.getTypeId())
+        ToolFHType type = typeRepository.findByTypeCodeAndCategory_Name(request.getTypeName(), request.getCategoryName())
                 .orElseThrow(() -> new IllegalArgumentException("Type not found"));
 
         existing.setSerialNumber(request.getSerialNumber());
