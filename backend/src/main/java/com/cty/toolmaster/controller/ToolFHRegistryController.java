@@ -41,10 +41,12 @@ public class ToolFHRegistryController {
         Page<ToolFHRegistryResponse> pageResult = toolFHRegistryService.getAll(page, rowsPerPage, filter, sortBy, descending);
         
         CustomPage customPage = CustomPage.builder()
-                .number(pageResult.getNumber() + 1)
-                .size(pageResult.getSize())
-                .totalElements(pageResult.getTotalElements())
+                .currentPage(pageResult.getNumber() + 1)
+                .rowsPerPage(pageResult.getSize())
+                .totalRows(pageResult.getTotalElements())
                 .totalPages(pageResult.getTotalPages())
+                .sortBy(sortBy != null ? sortBy : "")
+                .direction(descending ? "DESC" : "ASC")
                 .build();
 
         ApiResponse<List<ToolFHRegistryResponse>> apiResponse = new ApiResponse<>(

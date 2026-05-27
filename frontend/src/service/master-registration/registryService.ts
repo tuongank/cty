@@ -11,7 +11,7 @@ export const registryService = {
     const res = await api.get('/tool-fh-registries', { params })
     return {
       data: res.data.data,
-      total: res.data.meta?._page?.totalElements || 0
+      total: res.data.meta?._page?.totalRows || 0
     }
   },
 
