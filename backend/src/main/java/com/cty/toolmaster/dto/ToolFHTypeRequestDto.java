@@ -17,9 +17,6 @@ public class ToolFHTypeRequestDto {
     @NotNull(message = "Category ID cannot be null")
     private Integer categoryId;
     
-    @NotBlank(message = "Category name cannot be empty")
-    private String categoryName;
-    
     @NotBlank(message = "Type code cannot be empty")
     private String typeCode;
 }

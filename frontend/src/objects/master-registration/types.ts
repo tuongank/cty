@@ -41,8 +41,9 @@ export interface Registry {
   serialNumber: string;
   categoryId: number;
   categoryName: string;
+  typeId: number;
   typeCode: string;
-  zoneLoc: string;
+  location: string;
   status: string;
 }
 
@@ -76,7 +77,7 @@ export const REGISTRY_COLUMNS = [
   { name: 'serialNumber', label: 'Serial Number', field: 'serialNumber', align: 'left', sortable: true },
   { name: 'category', label: 'Category', field: 'categoryName', align: 'left', sortable: true },
   { name: 'type', label: 'Type', field: 'typeCode', align: 'left', sortable: true },
-  { name: 'zoneLoc', label: 'Zone / Loc', field: 'zoneLoc', align: 'left', sortable: true },
+  { name: 'location', label: 'Zone / Loc', field: 'location', align: 'left', sortable: true },
   { name: 'status', label: 'Status', field: 'status', align: 'left', sortable: true },
   { name: 'actions', label: 'Actions', field: 'actions', align: 'center' }
 ] as any[];

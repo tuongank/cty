@@ -20,14 +20,11 @@ public class ToolFHRegistryRequestDto {
     @NotNull(message = "Category ID cannot be null")
     private Integer categoryId;
     
-    @NotBlank(message = "Category name cannot be empty")
-    private String categoryName;
+    @NotNull(message = "Type ID cannot be null")
+    private Integer typeId;
     
-    @NotBlank(message = "Type code cannot be empty")
-    private String typeCode;
-    
-    @NotBlank(message = "Zone location cannot be empty")
-    private String zoneLoc;
+    @NotBlank(message = "Location cannot be empty")
+    private String location;
     
     @NotBlank(message = "Status cannot be empty")
     private String status;

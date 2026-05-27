@@ -1,7 +1,11 @@
 package com.cty.toolmaster.service;
 
+import com.cty.toolmaster.entity.ToolFHCategory;
 import com.cty.toolmaster.entity.ToolFHRegistry;
+import com.cty.toolmaster.entity.ToolFHType;
+import com.cty.toolmaster.repository.ToolFHCategoryRepository;
 import com.cty.toolmaster.repository.ToolFHRegistryRepository;
+import com.cty.toolmaster.repository.ToolFHTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -18,6 +22,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ExcelService {
     private final ToolFHRegistryRepository toolFHRegistryRepository;
+    private final ToolFHCategoryRepository categoryRepository;
+    private final ToolFHTypeRepository typeRepository;
 
     public Map<String, Object> uploadExcel(MultipartFile file) {
         List<ToolFHRegistry> registries = new ArrayList<>();
@@ -38,20 +44,32 @@ public class ExcelService {
                 
                 String categoryName = getCellValue(row.getCell(1));
                 String typeCode = getCellValue(row.getCell(2));
-                String zoneLoc = getCellValue(row.getCell(3));
+                String location = getCellValue(row.getCell(3));
                 String status = getCellValue(row.getCell(4));
                 
-                Integer categoryId = "HEAD".equalsIgnoreCase(categoryName) ? 2 : 1; // Temporary mapping based on integer IDs
+                ToolFHCategory category = categoryRepository.findToolFHCategoryByName(categoryName != null ? categoryName.trim().toUpperCase() : "")
+                        .orElse(null); // Or create it if needed, but assuming it exists
+
+                if (category == null) {
+                    continue; // skip if category invalid
+                }
+
+                ToolFHType type = typeRepository.findByTypeCodeAndCategoryId(typeCode != null ? typeCode.trim().toUpperCase() : "", category.getId())
+                        .orElse(null);
+                
+                if (type == null) {
+                    continue; // skip if type invalid
+                }
+
                 if (status == null || status.trim().isEmpty()) {
                     status = "ACTIVE";
                 }
                 
                 ToolFHRegistry registry = ToolFHRegistry.builder()
                         .serialNumber(serialNumber.trim())
-                        .categoryName(categoryName != null ? categoryName.trim().toUpperCase() : "")
-                        .categoryId(categoryId)
-                        .typeCode(typeCode != null ? typeCode.trim().toUpperCase() : "")
-                        .zoneLoc(zoneLoc != null ? zoneLoc.trim() : "")
+                        .category(category)
+                        .type(type)
+                        .location(location != null ? location.trim() : "")
                         .status(status.trim().toUpperCase())
                         .build();
                         

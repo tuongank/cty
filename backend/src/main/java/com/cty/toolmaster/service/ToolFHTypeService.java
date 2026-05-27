@@ -2,7 +2,9 @@ package com.cty.toolmaster.service;
 
 import com.cty.toolmaster.dto.ToolFHTypeRequestDto;
 import com.cty.toolmaster.dto.ToolFHTypeResponse;
+import com.cty.toolmaster.entity.ToolFHCategory;
 import com.cty.toolmaster.entity.ToolFHType;
+import com.cty.toolmaster.repository.ToolFHCategoryRepository;
 import com.cty.toolmaster.repository.ToolFHTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ToolFHTypeService {
     private final ToolFHTypeRepository toolFHTypeRepository;
+    private final ToolFHCategoryRepository categoryRepository;
 
     public List<ToolFHTypeResponse> getAll() {
         return toolFHTypeRepository.findAll().stream()
@@ -27,9 +30,12 @@ public class ToolFHTypeService {
         if (toolFHTypeRepository.findByTypeCodeAndCategoryId(request.getTypeCode(), request.getCategoryId()).isPresent()) {
             throw new IllegalArgumentException("Type already exists in this category");
         }
+        
+        ToolFHCategory category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
         ToolFHType toolFHType = ToolFHType.builder()
-                .categoryId(request.getCategoryId())
-                .categoryName(request.getCategoryName())
+                .category(category)
                 .typeCode(request.getTypeCode())
                 .build();
         ToolFHType saved = toolFHTypeRepository.save(toolFHType);
@@ -41,14 +47,16 @@ public class ToolFHTypeService {
         ToolFHType existing = toolFHTypeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Type not found"));
 
-        if (!existing.getTypeCode().equals(request.getTypeCode()) || !existing.getCategoryId().equals(request.getCategoryId())) {
+        if (!existing.getTypeCode().equals(request.getTypeCode()) || !existing.getCategory().getId().equals(request.getCategoryId())) {
             if (toolFHTypeRepository.findByTypeCodeAndCategoryId(request.getTypeCode(), request.getCategoryId()).isPresent()) {
                 throw new IllegalArgumentException("Type already exists in this category");
             }
         }
 
-        existing.setCategoryId(request.getCategoryId());
-        existing.setCategoryName(request.getCategoryName());
+        ToolFHCategory category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        existing.setCategory(category);
         existing.setTypeCode(request.getTypeCode());
         ToolFHType saved = toolFHTypeRepository.save(existing);
         return mapToResponse(saved);
@@ -65,8 +73,8 @@ public class ToolFHTypeService {
     private ToolFHTypeResponse mapToResponse(ToolFHType saved) {
         return ToolFHTypeResponse.builder()
                 .id(saved.getId())
-                .categoryId(saved.getCategoryId())
-                .categoryName(saved.getCategoryName())
+                .categoryId(saved.getCategory().getId())
+                .categoryName(saved.getCategory().getName())
                 .typeCode(saved.getTypeCode())
                 .createdDate(saved.getCreatedAt())
                 .updatedDate(saved.getUpdatedAt())

@@ -12,8 +12,9 @@ public class ToolFHRegistryResponse {
     private String serialNumber;
     private Integer categoryId;
     private String categoryName;
+    private Integer typeId;
     private String typeCode;
-    private String zoneLoc;
+    private String location;
     private String status;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;

@@ -128,7 +128,6 @@ async function onSubmit () {
       id: props.editItem?.id,
       data: {
         categoryId: form.categoryId,
-        categoryName: selectedCat?.label || '',
         typeCode: form.typeCode
       }
     })

@@ -44,7 +44,7 @@
           </q-select>
 
           <q-select
-            v-model="form.typeCode"
+            v-model="form.typeId"
             :options="filteredTypeOptions"
             label="Type *"
             outlined
@@ -68,7 +68,7 @@
           </q-select>
 
           <q-input
-            v-model="form.zoneLoc"
+            v-model="form.location"
             label="Zone / Location *"
             outlined
             dense
@@ -152,9 +152,9 @@ const statusOptions = TOOL_STATUS_OPTIONS
 
 const form = reactive({
   serialNumber: '',
-  categoryId: null as string | null,
-  typeCode: null as string | null,
-  zoneLoc: '',
+  categoryId: null as number | null,
+  typeId: null as number | null,
+  location: '',
   status: null as string | null
 })
 
@@ -164,7 +164,7 @@ const filteredTypeOptions = computed(() => {
   if (!form.categoryId) return []
   return props.types
     .filter(t => t.categoryId === form.categoryId)
-    .map(t => ({ label: t.typeCode, value: t.typeCode }))
+    .map(t => ({ label: t.typeCode, value: t.id }))
 })
 
 watch(() => props.modelValue, (val) => {
@@ -174,15 +174,15 @@ watch(() => props.modelValue, (val) => {
       isEdit.value = true
       form.serialNumber = props.editItem.serialNumber
       form.categoryId = props.editItem.categoryId
-      form.typeCode = props.editItem.typeCode
-      form.zoneLoc = props.editItem.zoneLoc
+      form.typeId = props.editItem.typeId
+      form.location = props.editItem.location
       form.status = props.editItem.status
     } else {
       isEdit.value = false
       form.serialNumber = ''
       form.categoryId = null
-      form.typeCode = null
-      form.zoneLoc = ''
+      form.typeId = null
+      form.location = ''
       form.status = null
     }
   }
@@ -193,7 +193,7 @@ watch(dialogVisible, (val) => {
 })
 
 function onCategoryChange () {
-  form.typeCode = null
+  form.typeId = null
 }
 
 async function onSubmit () {
@@ -210,8 +210,8 @@ async function onSubmit () {
         serialNumber: form.serialNumber,
         categoryId: form.categoryId,
         categoryName: selectedCat?.label || '',
-        typeCode: form.typeCode,
-        zoneLoc: form.zoneLoc,
+        typeId: form.typeId,
+        location: form.location,
         status: form.status
       }
     })

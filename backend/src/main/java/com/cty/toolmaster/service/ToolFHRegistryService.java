@@ -3,8 +3,12 @@ package com.cty.toolmaster.service;
 import com.cty.toolmaster.dto.CustomPage;
 import com.cty.toolmaster.dto.ToolFHRegistryRequestDto;
 import com.cty.toolmaster.dto.ToolFHRegistryResponse;
+import com.cty.toolmaster.entity.ToolFHCategory;
 import com.cty.toolmaster.entity.ToolFHRegistry;
+import com.cty.toolmaster.entity.ToolFHType;
+import com.cty.toolmaster.repository.ToolFHCategoryRepository;
 import com.cty.toolmaster.repository.ToolFHRegistryRepository;
+import com.cty.toolmaster.repository.ToolFHTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +25,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ToolFHRegistryService {
     private final ToolFHRegistryRepository toolFHRegistryRepository;
+    private final ToolFHCategoryRepository categoryRepository;
+    private final ToolFHTypeRepository typeRepository;
 
     public Page<ToolFHRegistryResponse> getAll(int page, int rowsPerPage, String filter, String sortBy, boolean descending) {
         Sort sort = Sort.unsorted();
@@ -50,12 +56,18 @@ public class ToolFHRegistryService {
         if (toolFHRegistryRepository.findBySerialNumber(request.getSerialNumber()).isPresent()) {
             throw new IllegalArgumentException("Serial number already exists");
         }
+
+        ToolFHCategory category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        ToolFHType type = typeRepository.findById(request.getTypeId())
+                .orElseThrow(() -> new IllegalArgumentException("Type not found"));
+
         ToolFHRegistry toolFHRegistry = ToolFHRegistry.builder()
                 .serialNumber(request.getSerialNumber())
-                .categoryId(request.getCategoryId())
-                .categoryName(request.getCategoryName())
-                .typeCode(request.getTypeCode())
-                .zoneLoc(request.getZoneLoc())
+                .category(category)
+                .type(type)
+                .location(request.getLocation())
                 .status(request.getStatus())
                 .build();
         ToolFHRegistry saved = toolFHRegistryRepository.save(toolFHRegistry);
@@ -73,11 +85,16 @@ public class ToolFHRegistryService {
             }
         }
 
+        ToolFHCategory category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        ToolFHType type = typeRepository.findById(request.getTypeId())
+                .orElseThrow(() -> new IllegalArgumentException("Type not found"));
+
         existing.setSerialNumber(request.getSerialNumber());
-        existing.setCategoryId(request.getCategoryId());
-        existing.setCategoryName(request.getCategoryName());
-        existing.setTypeCode(request.getTypeCode());
-        existing.setZoneLoc(request.getZoneLoc());
+        existing.setCategory(category);
+        existing.setType(type);
+        existing.setLocation(request.getLocation());
         existing.setStatus(request.getStatus());
         ToolFHRegistry saved = toolFHRegistryRepository.save(existing);
         return mapToResponse(saved);
@@ -95,10 +112,11 @@ public class ToolFHRegistryService {
         return ToolFHRegistryResponse.builder()
                 .id(saved.getId())
                 .serialNumber(saved.getSerialNumber())
-                .categoryId(saved.getCategoryId())
-                .categoryName(saved.getCategoryName())
-                .typeCode(saved.getTypeCode())
-                .zoneLoc(saved.getZoneLoc())
+                .categoryId(saved.getCategory().getId())
+                .categoryName(saved.getCategory().getName())
+                .typeId(saved.getType().getId())
+                .typeCode(saved.getType().getTypeCode())
+                .location(saved.getLocation())
                 .status(saved.getStatus())
                 .createdDate(saved.getCreatedAt())
                 .updatedDate(saved.getUpdatedAt())
