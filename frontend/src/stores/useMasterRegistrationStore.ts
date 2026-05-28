@@ -20,6 +20,7 @@ export const useMasterRegistrationStore = defineStore('masterRegistration', () =
 
   // Registries
   const registries = ref<Registry[]>([])
+  const allRegistries = ref<Registry[]>([])
   const registriesLoading = ref(false)
   const registryTotal = ref(0)
   const registryPagination = ref<PaginationState>({
@@ -45,6 +46,58 @@ export const useMasterRegistrationStore = defineStore('masterRegistration', () =
     return (categoryId: number) =>
       types.value.filter(t => t.categoryId === categoryId)
   })
+
+  // ============================================
+  // Dashboard Metrics Getters
+  // ============================================
+  const totalTools = computed(() => allRegistries.value.length)
+  
+  const toolsOnline = computed(() => 
+    allRegistries.value.filter(r => {
+      const s = r.status.toUpperCase()
+      return s.includes('ACTIVE') || s.includes('ONLINE') || s === 'OK'
+    }).length
+  )
+  
+  const toolsScrap = computed(() => 
+    allRegistries.value.filter(r => r.status.toUpperCase().includes('SCRAP')).length
+  )
+
+  const toolsPM = computed(() => 
+    allRegistries.value.filter(r => {
+      const s = r.status.toUpperCase()
+      return s.includes('PM') || s.includes('MAINT')
+    }).length
+  )
+
+  const toolsRepair = computed(() => 
+    allRegistries.value.filter(r => {
+      const s = r.status.toUpperCase()
+      return s.includes('REPAIR') || s.includes('DOWN') || s.includes('FAIL')
+    }).length
+  )
+
+  const categoryDistribution = computed(() => {
+    const dist = allRegistries.value.reduce((acc, curr) => {
+      acc[curr.categoryName] = (acc[curr.categoryName] || 0) + 1
+      return acc
+    }, {} as Record<string, number>)
+
+    return {
+      labels: Object.keys(dist),
+      datasets: [
+        {
+          data: Object.values(dist),
+          backgroundColor: ['#1976D2', '#21BA45', '#F2C037', '#C10015', '#9C27B0'],
+          borderWidth: 0
+        }
+      ]
+    }
+  })
+
+  const scrapList = computed(() => 
+    allRegistries.value.filter(r => r.status.toUpperCase().includes('SCRAP'))
+  )
 
   // ============================================
   // Category Actions
@@ -163,6 +216,25 @@ export const useMasterRegistrationStore = defineStore('masterRegistration', () =
   // ============================================
   // Registry Actions
   // ============================================
+  async function fetchAllRegistries() {
+    registriesLoading.value = true
+    try {
+      const result = await registryService.getAll({
+        page: 1,
+        rowsPerPage: 10000,
+        filter: '',
+        sortBy: null,
+        descending: false
+      })
+      allRegistries.value = result.data
+    } catch (error) {
+      console.error('Failed to fetch all registries:', error)
+      throw error
+    } finally {
+      registriesLoading.value = false
+    }
+  }
+
   async function fetchRegistries(props?: { pagination?: PaginationState; filter?: string }) {
     registriesLoading.value = true
     try {
@@ -268,6 +340,7 @@ export const useMasterRegistrationStore = defineStore('masterRegistration', () =
     types,
     typesLoading,
     registries,
+    allRegistries,
     registriesLoading,
     registryTotal,
     registryPagination,
@@ -276,6 +349,15 @@ export const useMasterRegistrationStore = defineStore('masterRegistration', () =
     // Getters
     categoryOptions,
     getTypesByCategory,
+    
+    // Dashboard Metrics
+    totalTools,
+    toolsOnline,
+    toolsScrap,
+    toolsPM,
+    toolsRepair,
+    categoryDistribution,
+    scrapList,
 
     // Category Actions
     fetchCategories,
@@ -290,6 +372,7 @@ export const useMasterRegistrationStore = defineStore('masterRegistration', () =
     deleteType,
 
     // Registry Actions
+    fetchAllRegistries,
     fetchRegistries,
     createRegistry,
     updateRegistry,

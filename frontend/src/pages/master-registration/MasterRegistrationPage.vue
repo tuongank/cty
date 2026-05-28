@@ -126,7 +126,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import { useMasterRegistrationStore } from 'stores/master-registration/useMasterRegistrationStore'
+import { useMasterRegistrationStore } from 'stores/useMasterRegistrationStore'
 
 import CategoryMasterCard from 'components/master-registration/CategoryMasterCard.vue'
 import TypeMasterCard from 'components/master-registration/TypeMasterCard.vue'

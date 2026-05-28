@@ -151,9 +151,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import type { QTableProps } from 'quasar'
-import { useToolManagementStore } from 'src/stores/tool-management/useToolManagementStore'
+import { useMasterRegistrationStore } from 'src/stores/useMasterRegistrationStore'
 
-const store = useToolManagementStore()
+const store = useMasterRegistrationStore()
 
 const filterReason = ref('All Reasons')
 const dateFrom = ref('')

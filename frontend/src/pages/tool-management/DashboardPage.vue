@@ -210,13 +210,13 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import type { QTableProps } from 'quasar'
-import { useToolManagementStore } from 'src/stores/tool-management/useToolManagementStore'
+import { useMasterRegistrationStore } from 'src/stores/useMasterRegistrationStore'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'vue-chartjs'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
-const store = useToolManagementStore()
+const store = useMasterRegistrationStore()
 
 onMounted(() => {
   store.fetchAllRegistries()
