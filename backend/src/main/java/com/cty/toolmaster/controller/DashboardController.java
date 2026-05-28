@@ -1,0 +1,23 @@
+package com.cty.toolmaster.controller;
+
+import com.cty.toolmaster.dto.DashboardMetricsDto;
+import com.cty.toolmaster.service.DashboardService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+@CrossOrigin(origins = "*")
+@RestController
+@RequestMapping("/api/dashboard")
+@RequiredArgsConstructor
+public class DashboardController {
+    private final DashboardService dashboardService;
+
+    @GetMapping("/metrics")
+    public ResponseEntity<DashboardMetricsDto> getMetrics() {
+        return ResponseEntity.ok(dashboardService.getMetrics());
+    }
+}

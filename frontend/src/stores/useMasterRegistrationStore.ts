@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { categoryService } from 'src/service/master-registration/categoryService'
 import { typeService } from 'src/service/master-registration/typeService'
 import { registryService } from 'src/service/master-registration/registryService'
+import { dashboardService, type DashboardMetrics } from 'src/service/master-registration/dashboardService'
 import type { Category, ToolType, Registry, PaginationState } from 'src/objects/master-registration/types'
 
 export const useMasterRegistrationStore = defineStore('masterRegistration', () => {
@@ -22,6 +23,7 @@ export const useMasterRegistrationStore = defineStore('masterRegistration', () =
   const registries = ref<Registry[]>([])
   const allRegistries = ref<Registry[]>([])
   const registriesLoading = ref(false)
+  const dashboardMetrics = ref<DashboardMetrics | null>(null)
   const registryTotal = ref(0)
   const registryPagination = ref<PaginationState>({
     page: 1,
@@ -50,39 +52,21 @@ export const useMasterRegistrationStore = defineStore('masterRegistration', () =
   // ============================================
   // Dashboard Metrics Getters
   // ============================================
-  const totalTools = computed(() => allRegistries.value.length)
+  const totalTools = computed(() => dashboardMetrics.value?.totalTools || 0)
   
-  const toolsOnline = computed(() => 
-    allRegistries.value.filter(r => {
-      const s = r.status.toUpperCase()
-      return s.includes('ACTIVE') || s.includes('ONLINE') || s === 'OK'
-    }).length
-  )
+  const toolsOnline = computed(() => dashboardMetrics.value?.toolsOnline || 0)
   
-  const toolsScrap = computed(() => 
-    allRegistries.value.filter(r => r.status.toUpperCase().includes('SCRAP')).length
-  )
+  const toolsScrap = computed(() => dashboardMetrics.value?.toolsScrap || 0)
 
-  const toolsPM = computed(() => 
-    allRegistries.value.filter(r => {
-      const s = r.status.toUpperCase()
-      return s.includes('PM') || s.includes('MAINT')
-    }).length
-  )
+  const toolsPM = computed(() => dashboardMetrics.value?.toolsPM || 0)
 
-  const toolsRepair = computed(() => 
-    allRegistries.value.filter(r => {
-      const s = r.status.toUpperCase()
-      return s.includes('REPAIR') || s.includes('DOWN') || s.includes('FAIL')
-    }).length
-  )
+  const toolsRepair = computed(() => dashboardMetrics.value?.toolsRepair || 0)
 
   const categoryDistribution = computed(() => {
-    const dist = allRegistries.value.reduce((acc, curr) => {
-      acc[curr.categoryName] = (acc[curr.categoryName] || 0) + 1
-      return acc
-    }, {} as Record<string, number>)
-
+    if (!dashboardMetrics.value || !dashboardMetrics.value.categoryDistribution) {
+      return { labels: [], datasets: [] }
+    }
+    const dist = dashboardMetrics.value.categoryDistribution
     return {
       labels: Object.keys(dist),
       datasets: [
@@ -219,16 +203,20 @@ export const useMasterRegistrationStore = defineStore('masterRegistration', () =
   async function fetchAllRegistries() {
     registriesLoading.value = true
     try {
-      const result = await registryService.getAll({
+      const metricsTask = dashboardService.getMetrics()
+      const registriesTask = registryService.getAll({
         page: 1,
         rowsPerPage: 10000,
         filter: '',
         sortBy: null,
         descending: false
       })
+
+      const [metrics, result] = await Promise.all([metricsTask, registriesTask])
+      dashboardMetrics.value = metrics
       allRegistries.value = result.data
     } catch (error) {
-      console.error('Failed to fetch all registries:', error)
+      console.error('Failed to fetch dashboard metrics:', error)
       throw error
     } finally {
       registriesLoading.value = false
