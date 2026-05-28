@@ -18,7 +18,6 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/tool-fh-types")
 public class ToolFHTypeController {
 

@@ -23,7 +23,6 @@ import java.util.Map;
 @Validated
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/tool-fh-registries")
 public class ToolFHRegistryController {
 
@@ -84,5 +83,14 @@ public class ToolFHRegistryController {
         Map<String, Object> result = excelService.uploadExcel(file);
         ApiResponse<Map<String, Object>> apiResponse = new ApiResponse<>(result, new String[0], "tool-fh-registry-upload-success");
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @GetMapping("/template/download")
+    public ResponseEntity<byte[]> downloadTemplate() {
+        byte[] excelData = excelService.generateTemplate();
+        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+        headers.set(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Registry_Template.xlsx");
+        headers.set(org.springframework.http.HttpHeaders.CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        return new ResponseEntity<>(excelData, headers, HttpStatus.OK);
     }
 }

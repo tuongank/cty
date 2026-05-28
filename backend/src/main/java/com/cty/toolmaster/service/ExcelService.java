@@ -101,4 +101,39 @@ public class ExcelService {
                 return "";
         }
     }
+
+    public byte[] generateTemplate() {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Registry");
+            Row headerRow = sheet.createRow(0);
+            
+            String[] headers = {"Serial Number", "Category", "Type", "Location", "Status"};
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                
+                CellStyle style = workbook.createCellStyle();
+                Font font = workbook.createFont();
+                font.setBold(true);
+                style.setFont(font);
+                cell.setCellStyle(style);
+                
+                sheet.setColumnWidth(i, 5000);
+            }
+
+            // Add a sample row
+            Row sampleRow = sheet.createRow(1);
+            sampleRow.createCell(0).setCellValue("T-001-DEMO");
+            sampleRow.createCell(1).setCellValue("FEEDER");
+            sampleRow.createCell(2).setCellValue("08 mm");
+            sampleRow.createCell(3).setCellValue("Zone A > Bin 01");
+            sampleRow.createCell(4).setCellValue("ACTIVE");
+
+            java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+            workbook.write(out);
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to generate Excel template: " + e.getMessage());
+        }
+    }
 }
