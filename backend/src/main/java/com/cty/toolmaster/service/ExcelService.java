@@ -28,35 +28,39 @@ public class ExcelService {
     public Map<String, Object> uploadExcel(MultipartFile file) {
         List<ToolFHRegistry> registries = new ArrayList<>();
         Map<String, Object> result = new HashMap<>();
-        
+
         try (InputStream is = file.getInputStream(); Workbook workbook = new XSSFWorkbook(is)) {
             Sheet sheet = workbook.getSheetAt(0);
-            
+
             // Assuming row 0 is header
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
-                if (row == null) continue;
-                
+                if (row == null)
+                    continue;
+
                 String serialNumber = getCellValue(row.getCell(0));
                 if (serialNumber == null || serialNumber.trim().isEmpty()) {
                     continue; // Skip empty rows
                 }
-                
+
                 String categoryName = getCellValue(row.getCell(1));
                 String typeCode = getCellValue(row.getCell(2));
                 String location = getCellValue(row.getCell(3));
                 String status = getCellValue(row.getCell(4));
-                
-                ToolFHCategory category = categoryRepository.findToolFHCategoryByName(categoryName != null ? categoryName.trim().toUpperCase() : "")
+
+                ToolFHCategory category = categoryRepository
+                        .findToolFHCategoryByName(categoryName != null ? categoryName.trim().toUpperCase() : "")
                         .orElse(null); // Or create it if needed, but assuming it exists
 
                 if (category == null) {
                     continue; // skip if category invalid
                 }
 
-                ToolFHType type = typeRepository.findByTypeCodeAndCategory_Name(typeCode != null ? typeCode.trim().toUpperCase() : "", category.getName())
+                ToolFHType type = typeRepository
+                        .findByTypeCodeAndCategory_Name(typeCode != null ? typeCode.trim().toUpperCase() : "",
+                                category.getName())
                         .orElse(null);
-                
+
                 if (type == null) {
                     continue; // skip if type invalid
                 }
@@ -64,7 +68,7 @@ public class ExcelService {
                 if (status == null || status.trim().isEmpty()) {
                     status = "ACTIVE";
                 }
-                
+
                 ToolFHRegistry registry = ToolFHRegistry.builder()
                         .serialNumber(serialNumber.trim())
                         .category(category)
@@ -72,26 +76,27 @@ public class ExcelService {
                         .location(location != null ? location.trim() : "")
                         .status(status.trim().toUpperCase())
                         .build();
-                        
+
                 registries.add(registry);
             }
-            
+
             // Bulk save
             toolFHRegistryRepository.saveAll(registries);
-            
+
             result.put("imported", registries.size());
             result.put("message", "Excel data uploaded successfully");
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to parse Excel file: " + e.getMessage());
         }
-        
+
         return result;
     }
-    
+
     private String getCellValue(Cell cell) {
-        if (cell == null) return "";
+        if (cell == null)
+            return "";
         switch (cell.getCellType()) {
             case STRING:
                 return cell.getStringCellValue();
@@ -106,18 +111,18 @@ public class ExcelService {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Registry");
             Row headerRow = sheet.createRow(0);
-            
-            String[] headers = {"Serial Number", "Category", "Type", "Location", "Status"};
+
+            String[] headers = { "Serial Number", "Category", "Type", "Location", "Status" };
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(headers[i]);
-                
+
                 CellStyle style = workbook.createCellStyle();
                 Font font = workbook.createFont();
                 font.setBold(true);
                 style.setFont(font);
                 cell.setCellStyle(style);
-                
+
                 sheet.setColumnWidth(i, 5000);
             }
 

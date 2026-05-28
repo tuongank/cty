@@ -31,19 +31,28 @@ export const useToolManagementStore = defineStore('toolManagement', () => {
   const totalTools = computed(() => allRegistries.value.length)
   
   const toolsOnline = computed(() => 
-    allRegistries.value.filter(r => r.status.toUpperCase() === 'ACTIVE' || r.status.toUpperCase() === 'ONLINE').length
+    allRegistries.value.filter(r => {
+      const s = r.status.toUpperCase()
+      return s.includes('ACTIVE') || s.includes('ONLINE') || s === 'OK'
+    }).length
   )
   
   const toolsScrap = computed(() => 
-    allRegistries.value.filter(r => r.status.toUpperCase() === 'SCRAP').length
+    allRegistries.value.filter(r => r.status.toUpperCase().includes('SCRAP')).length
   )
 
   const toolsPM = computed(() => 
-    allRegistries.value.filter(r => r.status.toUpperCase() === 'PM' || r.status.toUpperCase() === 'MAINTENANCE').length
+    allRegistries.value.filter(r => {
+      const s = r.status.toUpperCase()
+      return s.includes('PM') || s.includes('MAINT')
+    }).length
   )
 
   const toolsRepair = computed(() => 
-    allRegistries.value.filter(r => r.status.toUpperCase() === 'REPAIR').length
+    allRegistries.value.filter(r => {
+      const s = r.status.toUpperCase()
+      return s.includes('REPAIR') || s.includes('DOWN') || s.includes('FAIL')
+    }).length
   )
 
   // Doughnut Chart data (Category Distribution)

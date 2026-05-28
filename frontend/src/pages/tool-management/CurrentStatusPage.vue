@@ -225,19 +225,19 @@ const filteredRegistries = computed(() => {
 
 function getStatusColor(status) {
   const s = status ? status.toUpperCase() : ''
-  if (s === 'ACTIVE' || s === 'ONLINE') return 'positive'
-  if (s === 'PM' || s === 'MAINTENANCE') return 'primary'
-  if (s === 'REPAIR') return 'negative'
-  if (s === 'SCRAP') return 'grey-8'
+  if (s.includes('ACTIVE') || s.includes('ONLINE') || s === 'OK') return 'positive'
+  if (s.includes('PM') || s.includes('MAINT')) return 'primary'
+  if (s.includes('REPAIR') || s.includes('DOWN') || s.includes('FAIL')) return 'negative'
+  if (s.includes('SCRAP')) return 'grey-8'
   return 'grey'
 }
 
 function getStatusTextColor(status) {
   const s = status ? status.toUpperCase() : ''
-  if (s === 'ACTIVE' || s === 'ONLINE') return 'text-positive'
-  if (s === 'PM' || s === 'MAINTENANCE') return 'text-primary'
-  if (s === 'REPAIR') return 'text-negative'
-  if (s === 'SCRAP') return 'text-grey-8'
+  if (s.includes('ACTIVE') || s.includes('ONLINE') || s === 'OK') return 'text-positive'
+  if (s.includes('PM') || s.includes('MAINT')) return 'text-primary'
+  if (s.includes('REPAIR') || s.includes('DOWN') || s.includes('FAIL')) return 'text-negative'
+  if (s.includes('SCRAP')) return 'text-grey-8'
   return 'text-grey'
 }
 
