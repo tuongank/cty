@@ -171,7 +171,7 @@
                 <span>Capacity Load</span>
                 <span>85%</span>
               </div>
-              <q-linear-progress value="0.85" color="white" track-color="primary-light" size="6px" />
+              <q-linear-progress :value="0.85" color="white" track-color="primary-light" size="6px" />
             </div>
             <q-btn outline color="white" class="full-width q-mt-md" label="MANAGE SCHEDULE" />
           </q-card-section>
@@ -191,8 +191,9 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import type { QTableProps } from 'quasar'
 import { useToolManagementStore } from 'src/stores/tool-management/useToolManagementStore'
 
 const store = useToolManagementStore()
@@ -207,13 +208,13 @@ onMounted(() => {
   store.fetchAllRegistries()
 })
 
-const columns = [
+const columns: QTableProps['columns'] = [
   { name: 'toolCode', label: 'TOOL CODE', field: 'serialNumber', align: 'left', sortable: true },
   { name: 'category', label: 'CATEGORY', field: 'categoryName', align: 'left', sortable: true },
   { name: 'type', label: 'TYPE', field: 'typeCode', align: 'left', sortable: true },
   { name: 'status', label: 'STATUS', field: 'status', align: 'center', sortable: true },
   { name: 'location', label: 'CURRENT LOCATION', field: 'location', align: 'left', sortable: true },
-  { name: 'updatedAt', label: 'UPDATED AT', field: 'updatedDate', align: 'left', sortable: true, format: val => val ? new Date(val).toLocaleString() : 'N/A' }
+  { name: 'updatedAt', label: 'UPDATED AT', field: 'updatedDate', align: 'left', sortable: true, format: (val: string) => val ? new Date(val).toLocaleString() : 'N/A' }
 ]
 
 const filteredRegistries = computed(() => {
@@ -223,7 +224,7 @@ const filteredRegistries = computed(() => {
   return store.allRegistries.filter(r => r.categoryName === categoryFilter.value)
 })
 
-function getStatusColor(status) {
+function getStatusColor(status: string) {
   const s = status ? status.toUpperCase() : ''
   if (s.includes('ACTIVE') || s.includes('ONLINE') || s === 'OK') return 'positive'
   if (s.includes('PM') || s.includes('MAINT')) return 'primary'
@@ -232,7 +233,7 @@ function getStatusColor(status) {
   return 'grey'
 }
 
-function getStatusTextColor(status) {
+function getStatusTextColor(status: string) {
   const s = status ? status.toUpperCase() : ''
   if (s.includes('ACTIVE') || s.includes('ONLINE') || s === 'OK') return 'text-positive'
   if (s.includes('PM') || s.includes('MAINT')) return 'text-primary'

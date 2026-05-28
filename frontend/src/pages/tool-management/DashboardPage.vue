@@ -207,8 +207,9 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted } from 'vue'
+import type { QTableProps } from 'quasar'
 import { useToolManagementStore } from 'src/stores/tool-management/useToolManagementStore'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'vue-chartjs'
@@ -237,7 +238,7 @@ const chartOptions = {
 }
 
 // Mock Alert Data
-const alertColumns = [
+const alertColumns: QTableProps['columns'] = [
   { name: 'toolId', label: 'TOOL ID', field: 'toolId', align: 'left', style: 'font-weight: 600;' },
   { name: 'condition', label: 'CONDITION', field: 'condition', align: 'left' },
   { name: 'alertLevel', label: 'ALERT LEVEL', field: 'alertLevel', align: 'left' },

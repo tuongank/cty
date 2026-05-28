@@ -148,8 +148,9 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import type { QTableProps } from 'quasar'
 import { useToolManagementStore } from 'src/stores/tool-management/useToolManagementStore'
 
 const store = useToolManagementStore()
@@ -168,11 +169,11 @@ onMounted(() => {
   store.fetchAllRegistries()
 })
 
-const columns = [
+const columns: QTableProps['columns'] = [
   { name: 'scrapId', label: 'SCRAP ID', field: 'scrapId', align: 'left' },
   { name: 'toolId', label: 'TOOL ID (CODE)', field: 'serialNumber', align: 'left' },
   { name: 'reason', label: 'SCRAP REASON', field: 'mockReason', align: 'left' },
-  { name: 'date', label: 'SCRAP DATE', field: 'updatedDate', align: 'left', format: val => val ? new Date(val).toISOString().split('T')[0] : '2023-11-20' },
+  { name: 'date', label: 'SCRAP DATE', field: 'updatedDate', align: 'left', format: (val: string) => val ? new Date(val).toISOString().split('T')[0] : '2023-11-20' },
   { name: 'createdBy', label: 'CREATED BY', field: 'mockCreatedBy', align: 'left' },
   { name: 'remark', label: 'REMARK', field: 'mockRemark', align: 'left' },
   { name: 'action', label: 'ACTION', field: 'action', align: 'center' }
@@ -194,7 +195,7 @@ const enrichedScrapList = computed(() => {
   })
 })
 
-function getReasonColor(reason) {
+function getReasonColor(reason: string) {
   if (reason === 'Irreparable Damage') return 'negative'
   if (reason === 'EndOfServiceLife') return 'primary'
   if (reason === 'Safety Recall') return 'warning'

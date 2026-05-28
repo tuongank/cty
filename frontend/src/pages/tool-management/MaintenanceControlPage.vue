@@ -22,7 +22,7 @@
               <div class="text-subtitle2 text-positive"><q-icon name="trending_up" /> +2.1%</div>
             </div>
             <div class="q-mt-sm">
-              <q-linear-progress value="0.884" color="primary" size="8px" class="rounded-borders" />
+              <q-linear-progress :value="0.884" color="primary" size="8px" class="rounded-borders" />
             </div>
             <div class="text-caption text-grey-7 q-mt-sm">
               156 Assets Healthy / 18 Actions Required
@@ -235,8 +235,9 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import type { QTableProps } from 'quasar'
 import { useToolManagementStore } from 'src/stores/tool-management/useToolManagementStore'
 
 const store = useToolManagementStore()
@@ -250,7 +251,7 @@ onMounted(() => {
   store.fetchAllRegistries()
 })
 
-const columns = [
+const columns: QTableProps['columns'] = [
   { name: 'toolId', label: 'TOOL ID', field: 'serialNumber', align: 'left' },
   { name: 'cycle', label: 'CHECK CYCLE', field: 'mockCycle', align: 'left' },
   { name: 'usage', label: 'CURRENT USAGE', field: 'mockUsage', align: 'left', style: 'width: 250px;' },
@@ -283,7 +284,7 @@ const enrichedMaintenanceList = computed(() => {
   })
 })
 
-function getPriorityColor(p) {
+function getPriorityColor(p: string) {
   if (p === 'CRITICAL') return 'negative'
   if (p === 'UPCOMING') return 'warning'
   if (p === 'STABLE') return 'positive'
