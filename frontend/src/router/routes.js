@@ -10,7 +10,7 @@ const routes = [
       {
         path: 'administration/master-registration',
         name: 'MasterRegistration',
-        component: () => import('pages/master-registration/MasterRegistrationPage.vue'),
+        component: () => import('pages/feeder/tool-register-registration/MasterRegistrationPage.vue'),
         meta: {
           title: 'Master Registration',
           breadcrumb: [
@@ -22,7 +22,7 @@ const routes = [
       {
         path: 'tool-management/dashboard',
         name: 'Dashboard',
-        component: () => import('pages/tool-management/DashboardPage.vue'),
+        component: () => import('pages/feeder/operations-dashboard/DashboardPage.vue'),
         meta: {
           title: 'Operations Dashboard',
           breadcrumb: [
@@ -34,7 +34,7 @@ const routes = [
       {
         path: 'tool-management/current-status',
         name: 'CurrentStatus',
-        component: () => import('pages/tool-management/CurrentStatusPage.vue'),
+        component: () => import('pages/feeder/tool-status/CurrentStatusPage.vue'),
         meta: {
           title: 'Current Status',
           breadcrumb: [
@@ -46,7 +46,7 @@ const routes = [
       {
         path: 'tool-management/scrap-history',
         name: 'ScrapHistory',
-        component: () => import('pages/tool-management/ScrapHistoryPage.vue'),
+        component: () => import('pages/feeder/scrap-history/ScrapHistoryPage.vue'),
         meta: {
           title: 'Scrap History',
           breadcrumb: [
@@ -58,7 +58,7 @@ const routes = [
       {
         path: 'tool-management/maintenance',
         name: 'MaintenanceControl',
-        component: () => import('pages/tool-management/MaintenanceControlPage.vue'),
+        component: () => import('pages/feeder/maintainace-control/MaintenanceControlPage.vue'),
         meta: {
           title: 'Maintenance Control',
           breadcrumb: [

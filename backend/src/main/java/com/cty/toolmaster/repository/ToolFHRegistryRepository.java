@@ -27,6 +27,6 @@ public interface ToolFHRegistryRepository extends JpaRepository<ToolFHRegistry, 
     @Query("SELECT COUNT(r) FROM ToolFHRegistry r WHERE UPPER(r.status) LIKE '%REPAIR%' OR UPPER(r.status) LIKE '%DOWN%' OR UPPER(r.status) LIKE '%FAIL%'")
     long countRepairTools();
 
-    @Query("SELECT r.category.category, COUNT(r) FROM ToolFHRegistry r GROUP BY r.category.category")
+    @Query("SELECT r.category.name, COUNT(r) FROM ToolFHRegistry r GROUP BY r.category.name")
     List<Object[]> countByCategory();
 }
